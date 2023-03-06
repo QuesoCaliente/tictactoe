@@ -12,18 +12,22 @@ export default function VsPlayer() {
   }, [state.board]);
 
   return (
-    <div className="mx-auto mt-32 md:max-w-2xl">
-      <div className="mb-5 flex items-center justify-around">
-        <Image src="/logo.svg" alt="Logo" width={100} height={100} />
-        <button className="bg-brand-green-300 py-4 px-5 font-bold text-brand-white-200">
-          {state.turn} TURN
-        </button>
-        <button
-          onClick={() => actions.reset()}
-          className="bg-brand-green-300 py-4 px-5 font-bold text-brand-white-200"
-        >
-          Reload
-        </button>
+    <div className="mx-auto mt-32 px-5 md:max-w-2xl lg:px-0">
+      <div className="mb-5 flex flex-col items-center justify-around gap-5 lg:flex-row">
+        <div className="flex-[1]">
+          <Image src="/logo.svg" alt="Logo" width={100} height={100} />
+        </div>
+        <div className="flex w-fit flex-[3] justify-around gap-5">
+          <button className="bg-brand-green-300 py-4 px-5 font-bold text-brand-white-200">
+            {state.turn} TURN
+          </button>
+          <button
+            onClick={() => actions.reset()}
+            className="bg-brand-green-300 py-4 px-5 font-bold text-brand-white-200"
+          >
+            Reload
+          </button>
+        </div>
       </div>
       <Board />
     </div>
@@ -38,7 +42,7 @@ const Board = () => {
       <div className="flex flex-col gap-5">
         {state.board.map((row, i) => {
           return (
-            <div key={i} className="grid grid-cols-3 gap-8">
+            <div key={i} className="grid grid-cols-3 gap-4 lg:gap-8">
               {row.map((cell, j) => {
                 return (
                   <Cell
@@ -52,16 +56,16 @@ const Board = () => {
             </div>
           );
         })}
-        <div className="flex w-full justify-between">
-          <div className="flex w-[202px] flex-col items-center justify-center gap-3 rounded-xl bg-brand-green-200 p-3">
+        <div className="flex w-full flex-col items-center justify-between gap-3 lg:flex-row">
+          <div className="flex w-full flex-col items-center justify-center gap-3 rounded-xl bg-brand-green-200 p-3 lg:w-[202px]">
             <span className="text-xl">Player X</span>
             <span className="text-3xl">{state.score.X}</span>
           </div>
-          <div className="flex w-[202px] flex-col items-center justify-center gap-3 rounded-xl bg-brand-white-200 p-3">
+          <div className="flex w-full flex-col items-center justify-center gap-3 rounded-xl bg-brand-white-200 p-3 lg:w-[202px]">
             <span className="text-xl">Ties</span>
             <span className="text-xl">not available</span>
           </div>
-          <div className="flex w-[202px] flex-col items-center justify-center gap-3 rounded-xl bg-brand-yellow-200 p-3">
+          <div className="flex w-full flex-col items-center justify-center gap-3 rounded-xl bg-brand-yellow-200 p-3 lg:w-[202px]">
             <span className="text-xl">Player O</span>
             <span className="text-3xl">{state.score.O}</span>
           </div>
@@ -81,7 +85,7 @@ const Cell = ({
   isDisabled?: boolean;
 }) => {
   return (
-    <div className="shadow-cell flex h-[140px] w-full items-center justify-center rounded-xl bg-brand-green-300">
+    <div className="shadow-cell flex h-[80px] w-full items-center justify-center rounded-xl bg-brand-green-300 lg:h-[140px]">
       <button
         className="flex h-full w-full items-center justify-center rounded-xl"
         onClick={onClick}
