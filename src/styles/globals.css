@@ -1,0 +1,44 @@
+@tailwind base;  
+@tailwind components;  
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'Outfit', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.btn-shadow {
+  -webkit-box-shadow: inset 0px -10px 0px -3px rgba(204,139,19,0.5);
+  -moz-box-shadow: inset 0px -10px 0px -3px rgba(204,139,19,0.5);
+  box-shadow: inset 0px -10px 0px -3px rgba(204,139,19,0.5);
+}
+
+.btn-shadow-green {
+  -webkit-box-shadow: inset 0px -10px 0px -3px rgba(17,140,135,1);
+-moz-box-shadow: inset 0px -10px 0px -3px rgba(17,140,135,1);
+box-shadow: inset 0px -10px 0px -3px rgba(17,140,135,1);
+}
+
+.btn-shadow-red {
+  -webkit-box-shadow: inset 0px -10px 0px -3px rgb(140, 17, 17);
+-moz-box-shadow: inset 0px -10px 0px -3px rgb(140, 17, 17);
+box-shadow: inset 0px -10px 0px -3px rgb(140, 17, 17);
+}
+
+.btn-shadow-gray:disabled {
+  -webkit-box-shadow: inset 0px -10px 0px -3px rgb(129, 129, 129);
+-moz-box-shadow: inset 0px -10px 0px -3px rgb(129, 129, 129);
+box-shadow: inset 0px -10px 0px -3px rgb(129, 129, 129);
+}
+
+.shadow-cell {
+  -webkit-box-shadow: inset 0px -10px 0px -3px #10212A;
+-moz-box-shadow: inset 0px -10px 0px -3px #10212A;
+box-shadow: inset 0px -10px 0px -3px #10212A;
+}
