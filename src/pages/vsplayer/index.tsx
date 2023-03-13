@@ -3,7 +3,7 @@ import React from "react";
 import { useTicTacToe } from "../../context";
 import { useEffect } from "react";
 import Modal from "@/components/modal";
-import styles from "./vsplayer.module.css";
+import { motion } from "framer-motion";
 
 export default function VsPlayer() {
   const { state, actions } = useTicTacToe();
@@ -13,16 +13,21 @@ export default function VsPlayer() {
   }, [state.board]);
 
   return (
-    <div
-      className={[
-        "mx-auto mt-32 px-5 md:max-w-2xl lg:px-0 ",
-        styles.transDown,
-      ].join(" ")}
+    <motion.div
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -100 }}
+      className={["mx-auto mt-32 px-5 md:max-w-2xl lg:px-0 "].join(" ")}
     >
       <div className="mb-5 flex flex-col items-center justify-around gap-5 lg:flex-row">
-        <div className="flex-[1]">
+        <motion.div
+          initial={{ opacity: 0, y: -100 }}
+          animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
+          exit={{ opacity: 0, y: 100 }}
+          className="flex-[1]"
+        >
           <Image src="/logo.svg" alt="Logo" width={100} height={100} />
-        </div>
+        </motion.div>
         <div className="flex w-fit flex-[3] justify-around gap-5">
           <button className="bg-brand-green-300 py-4 px-5 font-bold text-brand-white-200">
             {state.turn} TURN
@@ -36,7 +41,7 @@ export default function VsPlayer() {
         </div>
       </div>
       <Board />
-    </div>
+    </motion.div>
   );
 }
 
