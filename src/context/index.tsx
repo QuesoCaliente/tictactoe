@@ -1,7 +1,14 @@
 import { createContext, useContext, useState } from "react";
 
+enum Status {
+  IDLE = "idle",
+  PLAYING = "playing",
+  FINISHED = "finished",
+}
+
 interface TicTacToeContext {
   state: {
+    status: Status;
     board: string[][];
     turn: "X" | "O";
     winner: "X" | "O" | null;
@@ -21,6 +28,7 @@ interface TicTacToeContext {
 
 const defaultContext: TicTacToeContext = {
   state: {
+    status: Status.IDLE,
     board: [
       ["", "", ""],
       ["", "", ""],

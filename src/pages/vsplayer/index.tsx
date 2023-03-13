@@ -3,6 +3,7 @@ import React from "react";
 import { useTicTacToe } from "../../context";
 import { useEffect } from "react";
 import Modal from "@/components/modal";
+import styles from "./vsplayer.module.css";
 
 export default function VsPlayer() {
   const { state, actions } = useTicTacToe();
@@ -12,7 +13,12 @@ export default function VsPlayer() {
   }, [state.board]);
 
   return (
-    <div className="mx-auto mt-32 px-5 md:max-w-2xl lg:px-0">
+    <div
+      className={[
+        "mx-auto mt-32 px-5 md:max-w-2xl lg:px-0 ",
+        styles.transDown,
+      ].join(" ")}
+    >
       <div className="mb-5 flex flex-col items-center justify-around gap-5 lg:flex-row">
         <div className="flex-[1]">
           <Image src="/logo.svg" alt="Logo" width={100} height={100} />
