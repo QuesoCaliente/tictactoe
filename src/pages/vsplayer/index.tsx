@@ -47,13 +47,30 @@ export default function VsPlayer() {
 
 const Board = () => {
   const { state, actions } = useTicTacToe();
+
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.09,
+      },
+    },
+  };
+
   return (
     <>
       <Modal />
       <div className="flex flex-col gap-5">
         {state.board.map((row, i) => {
           return (
-            <div key={i} className="grid grid-cols-3 gap-4 lg:gap-8">
+            <motion.div
+              variants={container}
+              initial="hidden"
+              animate="show"
+              key={i}
+              className="grid grid-cols-3 gap-4 lg:gap-8"
+            >
               {row.map((cell, j) => {
                 return (
                   <Cell
@@ -64,7 +81,7 @@ const Board = () => {
                   />
                 );
               })}
-            </div>
+            </motion.div>
           );
         })}
         <div className="flex w-full flex-col items-center justify-between gap-3 lg:flex-row">
@@ -95,8 +112,15 @@ const Cell = ({
   value?: "X" | "O";
   isDisabled?: boolean;
 }) => {
+  const animatedCell = {
+    hidden: { opacity: 0, scale: 0 },
+    show: { opacity: 1, scale: 1 },
+  };
   return (
-    <div className="shadow-cell flex h-[80px] w-full items-center justify-center rounded-xl bg-brand-green-300 lg:h-[140px]">
+    <motion.div
+      variants={animatedCell}
+      className="shadow-cell flex h-[80px] w-full items-center justify-center rounded-xl bg-brand-green-300 lg:h-[140px]"
+    >
       <button
         className="flex h-full w-full items-center justify-center rounded-xl"
         onClick={onClick}
@@ -104,7 +128,7 @@ const Cell = ({
       >
         {value === "X" ? <XIcon /> : value === "O" ? <OIcon /> : null}
       </button>
-    </div>
+    </motion.div>
   );
 };
 
