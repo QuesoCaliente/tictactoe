@@ -1,32 +1,45 @@
 {
   "name": "tictactoe",
   "version": "0.1.0",
+  "main": "main/main.js",
+  "aithor": "QuesoCaliente",
+  "description": "Tic Tac Toe game with multiplayer",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "concurrently -n \"NEXT,ELECTRON\" -c \"yellow,blue\" --kill-others \"next dev\" \"electron .\"",
+    "build": "next build && electron-builder",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@lottiefiles/lottie-player": "1.7.1",
     "@types/node": "18.11.9",
-    "@types/react": "18.0.25",
-    "@types/react-dom": "18.0.9",
+    "electron-serve": "^2.1.1",
     "eslint": "8.27.0",
-    "eslint-config-next": "13.0.3",
-    "framer-motion": "10.2.4",
-    "next": "13.0.3",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "typescript": "4.9.3"
+    "framer-motion": "12.4.5",
+    "next": "15.1.7",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "socket.io-client": "^4.8.1",
+    "typescript": "4.9.3",
+    "update-electron-app": "^3.1.1"
   },
   "devDependencies": {
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4",
     "autoprefixer": "^10.4.13",
+    "concurrently": "^9.1.2",
+    "electron": "^35.0.3",
+    "electron-builder": "^25.1.8",
+    "eslint-config-next": "15.1.7",
     "eslint-config-prettier": "^8.5.0",
     "postcss": "^8.4.19",
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.13",
     "tailwindcss": "^3.2.4"
+  },
+  "overrides": {
+    "@types/react": "19.0.10",
+    "@types/react-dom": "19.0.4"
   }
 }

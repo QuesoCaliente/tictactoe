@@ -6,10 +6,10 @@ import Modal from "@/components/modal";
 import { motion } from "framer-motion";
 
 export default function VsPlayer() {
-  const { state, actions } = useTicTacToe();
+  const { state, checkWinner, gameMode } = useTicTacToe();
 
   useEffect(() => {
-    actions.checkWinner(state.board);
+    checkWinner();
   }, [state.board]);
 
   return (
@@ -33,7 +33,7 @@ export default function VsPlayer() {
             {state.turn} TURN
           </button>
           <button
-            onClick={() => actions.reset()}
+            onClick={() => gameMode.reset()}
             className="bg-brand-green-300 py-4 px-5 font-bold text-brand-white-200"
           >
             Reload
@@ -45,8 +45,8 @@ export default function VsPlayer() {
   );
 }
 
-const Board = () => {
-  const { state, actions } = useTicTacToe();
+export const Board = () => {
+  const { state, gameMode } = useTicTacToe();
 
   const container = {
     hidden: { opacity: 0 },
@@ -76,7 +76,7 @@ const Board = () => {
                   <Cell
                     key={j}
                     value={cell as "X" | "O"}
-                    onClick={() => actions.move(i, j, state.turn)}
+                    onClick={() => gameMode.move(i, j, state.turn)}
                     isDisabled={cell !== ""}
                   />
                 );
@@ -103,7 +103,7 @@ const Board = () => {
   );
 };
 
-const Cell = ({
+export const Cell = ({
   onClick,
   value,
   isDisabled,
