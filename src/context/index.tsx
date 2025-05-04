@@ -1,41 +1,34 @@
-import { GameMode } from "@/core/gameMode/GameMode";
-import { LocalGame } from "@/core/gameMode/LocalGame";
-import { WebSocketGame } from "@/core/gameMode/WebSocketGame";
 import { createContext, useContext, useState } from "react";
 
-interface TicTacToeState {
-  status: string;
-  board: string[][];
-  turn: "X" | "O";
-  winner: "X" | "O" | null;
-  roomId: string | null;
-  error: string | null;
-  score: {
-    X: number;
-    O: number;
+enum Status {
+  IDLE = "idle",
+  PLAYING = "playing",
+  FINISHED = "finished",
+}
+
+interface TicTacToeContext {
+  state: {
+    status: Status;
+    board: string[][];
+    turn: "X" | "O";
+    winner: "X" | "O" | null;
+    score: {
+      X: number;
+      O: number;
+    };
+  };
+  actions: {
+    move: (row: number, col: number, turn: "X" | "O") => void;
+    reset: () => void;
+    checkWinner: (board: String[][]) => void;
+    upScore: (player: "X" | "O") => void;
+    setPlayer: (player: "X" | "O") => void;
   };
 }
 
-interface TicTacToeContextType {
-  state: TicTacToeState;
-  gameMode: GameMode;
-  switchMode: (mode: 'local' | 'online') => void;
-  setPlayer: (player: "X" | "O") => void;
-  updateScore: (player: "X" | "O") => void;
-  checkWinner: () => void;
-}
-
-const TicTacToeContext = createContext<TicTacToeContextType | null>(null);
-
-export const useTicTacToe = () => {
-  const context = useContext(TicTacToeContext);
-  if (!context) throw new Error("Debe usarse dentro de TicTacToeProvider");
-  return context;
-};
-
-export const TicTacToeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [state, setState] = useState<TicTacToeState>({
-    status: "idle",
+const defaultContext: TicTacToeContext = {
+  state: {
+    status: Status.IDLE,
     board: [
       ["", "", ""],
       ["", "", ""],
@@ -43,76 +36,146 @@ export const TicTacToeProvider = ({ children }: { children: React.ReactNode }) =
     ],
     turn: "X",
     winner: null,
-    roomId: null,
-    error: null,
-    owner: {
-      id: "",
-      option: "",
-    },
-    opponent: {
-      id: "",
-      option: "",
-    },
     score: {
       X: 0,
       O: 0,
     },
-  });
+  },
+  actions: {
+    move: (row: number, col: number, turn: "X" | "O") => {},
+    reset: () => {},
+    checkWinner: () => {},
+    upScore: (player: "X" | "O") => {},
+    setPlayer: (player: "X" | "O") => {},
+  },
+};
 
-  const [gameMode, setGameMode] = useState<GameMode>(new LocalGame(setState));
+const TicTacToeContext = createContext<TicTacToeContext>(defaultContext);
 
-  const checkWinner = () => {
-    const { board } = state;
-    const winningCombinations = [
-      // Filas
-      [board[0][0], board[0][1], board[0][2]],
-      [board[1][0], board[1][1], board[1][2]],
-      [board[2][0], board[2][1], board[2][2]],
-      // Columnas
-      [board[0][0], board[1][0], board[2][0]],
-      [board[0][1], board[1][1], board[2][1]],
-      [board[0][2], board[1][2], board[2][2]],
-      // Diagonales
-      [board[0][0], board[1][1], board[2][2]],
-      [board[0][2], board[1][1], board[2][0]],
-    ];
+export const useTicTacToe = () => useContext(TicTacToeContext);
 
-    for (let combination of winningCombinations) {
-      if (combination.every(cell => cell === "X")) {
-        setState((prev) => ({ ...prev, winner: "X" }));
-        updateScore("X");
-        return;
-      }
-      if (combination.every(cell => cell === "O")) {
-        setState((prev) => ({ ...prev, winner: "O" }));
-        updateScore("O");
-        return;
-      }
-    }
-
-    // Empate
-    if (board.every(row => row.every(cell => cell !== "")) && !state.winner) {
-      setState((prev) => ({ ...prev, status: "draw" }));
-    }
+export const TicTacToeProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const move = (rowMove: number, col: number, turn: "X" | "O") => {
+    setState((prevState) => {
+      const newBoard = prevState.board.map((row, i) => {
+        if (i === rowMove) {
+          return row.map((cell, j) => {
+            if (j === col) {
+              return turn;
+            }
+            return cell;
+          });
+        }
+        return row;
+      });
+      return {
+        ...prevState,
+        board: newBoard,
+        turn: turn === "X" ? "O" : "X",
+      };
+    });
   };
 
-  const switchMode = (mode: "local" | "online") => {
-    if (mode === "online") setGameMode(new WebSocketGame(setState));
-    else setGameMode(new LocalGame(setState));
-  };
-  const updateScore = (player: "X" | "O") => {
-    setState((prev) => ({
-      ...prev,
-      score: { ...prev.score, [player]: prev.score[player] + 1 },
-    }));
+  const reset = () => {
+    setState((prevState) => {
+      return {
+        ...prevState,
+        board: [
+          ["", "", ""],
+          ["", "", ""],
+          ["", "", ""],
+        ],
+        winner: null,
+      };
+    });
   };
 
   const setPlayer = (player: "X" | "O") => {
-    setState((prev) => ({ ...prev, turn: player }));
+    setState((prevState) => {
+      return {
+        ...prevState,
+        turn: player,
+      };
+    });
   };
 
+  const checkWinner = (board: String[][]) => {
+    let winner: "X" | "O" | null = null;
+
+    board.forEach((row) => {
+      if (row.every((cell) => cell === "X")) {
+        winner = "X";
+      } else if (row.every((cell) => cell === "O")) {
+        winner = "O";
+      }
+    });
+
+    for (let i = 0; i < board.length; i++) {
+      if (
+        board[0][i] === board[1][i] &&
+        board[1][i] === board[2][i] &&
+        board[0][i] !== ""
+      ) {
+        winner = board[0][i] as "X" | "O";
+      }
+    }
+
+    if (
+      board[0][0] === board[1][1] &&
+      board[1][1] === board[2][2] &&
+      board[0][0] !== ""
+    ) {
+      winner = board[0][0] as "X" | "O";
+    }
+    if (
+      board[0][2] === board[1][1] &&
+      board[1][1] === board[2][0] &&
+      board[0][2] !== ""
+    ) {
+      winner = board[0][2] as "X" | "O";
+    }
+
+    if (winner) {
+      setState((prevState) => {
+        return {
+          ...prevState,
+          winner,
+        };
+      });
+    }
+  };
+
+  const upScore = (player: "X" | "O") => {
+    setState((prevState) => {
+      return {
+        ...prevState,
+        score: {
+          ...prevState.score,
+          [player]: prevState.score[player] + 1,
+        },
+      };
+    });
+  };
+  const [state, setState] = useState(defaultContext.state);
+  const [actions, setActions] = useState({
+    move,
+    reset,
+    checkWinner,
+    upScore,
+    setPlayer,
+  });
+
   return (
-    <TicTacToeContext.Provider value={{ state, gameMode, switchMode, setPlayer, updateScore, checkWinner }}>
+    <TicTacToeContext.Provider
+      value={{
+        state,
+        actions,
+      }}
+    >
       {children}
     </TicTacToeContext.Provider>
   );

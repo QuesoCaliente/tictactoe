@@ -4,12 +4,12 @@ import { useTicTacToe } from "../../context/index";
 import Button from "../button";
 
 export default function Modal() {
-  const { state, updateScore, gameMode } = useTicTacToe();
+  const { state, actions } = useTicTacToe();
   const navigation = useRouter();
 
   const handleNextRound = () => {
-    updateScore(state.winner!);
-    gameMode.reset();
+    actions.upScore(state.winner!);
+    actions.reset();
   };
   if (!state.winner) return null;
 

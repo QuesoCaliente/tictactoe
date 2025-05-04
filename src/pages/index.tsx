@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 
 export default function Home() {
   const navigation = useRouter();
-  const { setPlayer } = useTicTacToe();
+  const { actions } = useTicTacToe();
   const handleVsPlayer = () => {
     navigation.push("/vsplayer");
   };
@@ -16,7 +16,7 @@ export default function Home() {
     <div className="flex min-h-screen w-full flex-col justify-center gap-10 px-5">
       <Header />
       <main className="mx-auto flex w-full max-w-lg flex-col items-center gap-3">
-        <PickPlayer onMark={(mark) => setPlayer(mark.player1)} />
+        <PickPlayer onMark={(mark) => actions.setPlayer(mark.player1)} />
         <Button disabled>NEW GAME (VS CPU)</Button>
         <Button onClick={() => handleVsPlayer()} variant="green">
           NEW GAME (VS Player)
